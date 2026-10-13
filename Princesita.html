@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Mi Princesa Hermosa</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for interactive celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Poppins"', 'sans-serif'],
+                    },
+                    colors: {
+                        roseGold: '#e0a899',
+                        deepWine: '#1a0509',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at center, #3c0919 0%, #1a0509 70%, #0d0205 100%);
+            color: #fce7f0;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: linear-gradient(135deg, rgba(45, 10, 20, 0.88) 0%, rgba(20, 4, 8, 0.92) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(224, 168, 153, 0.25);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .gold-glow {
+            text-shadow: 0 0 15px rgba(224, 168, 153, 0.4);
+        }
+
+        /* Polaroid Photo Frame Styling */
+        .polaroid-frame {
+            background: #ffffff;
+            padding: 8px 8px 24px 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(224, 168, 153, 0.25);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .polaroid-frame:hover, .polaroid-frame:active {
+            transform: scale(1.06) rotate(0deg) !important;
+            z-index: 20;
+            box-shadow: 0 15px 35px rgba(224, 168, 153, 0.4), 0 0 25px rgba(244, 63, 94, 0.3);
+        }
+
+        /* Floating Hearts Background Animation */
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.6) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .floating-heart {
+            position: fixed;
+            color: rgba(224, 168, 153, 0.5);
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes softPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(224, 168, 153, 0.2); }
+            50% { transform: scale(1.01); box-shadow: 0 0 35px rgba(224, 168, 153, 0.35); }
+        }
+
+        .pulse-glow {
+            animation: softPulse 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col justify-between relative selection:bg-rose-500 selection:text-white">
+
+    <div id="hearts-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+
+    <header class="w-full py-5 px-6 flex justify-between items-center z-10 max-w-md mx-auto">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-heart text-rose-400 animate-pulse"></i>
+            <span class="font-serif italic text-rose-200 tracking-wider text-sm">Para Siempre Juntos</span>
+        </div>
+        <button id="music-btn" onclick="toggleAudio()" class="bg-white/10 hover:bg-white/25 border border-rose-300/30 px-3 py-1.5 rounded-full text-xs text-rose-200 backdrop-blur-md transition-all flex items-center gap-2 active:scale-95">
+            <i class="fa-solid fa-music" id="music-icon"></i> <span id="music-text">Música Romántica</span>
+        </button>
+    </header>
+
+    <audio id="bg-audio" loop>
+        <source src="https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg" type="audio/ogg">
+    </audio>
+
+    <main class="w-full max-w-md mx-auto px-4 py-2 z-10 flex-1 flex flex-col justify-center">
+        
+        <div class="glass-card rounded-3xl p-6 md:p-8 pulse-glow relative overflow-hidden mb-6">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="text-center mb-6">
+                <span class="inline-block p-3 rounded-full bg-rose-950/60 border border-rose-500/30 text-rose-300 mb-2 shadow-inner">
+                    <i class="fa-solid fa-envelope-open-text text-xl"></i>
+                </span>
+                <h1 class="font-serif text-2xl md:text-3xl font-bold text-rose-100 gold-glow tracking-wide">
+                    Te Pido Perdón
+                </h1>
+                <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-rose-400 to-transparent mx-auto mt-2"></div>
+            </div>
+
+            <!-- Letter Content -->
+            <div class="space-y-4 text-rose-100/90 text-sm md:text-base font-light leading-relaxed text-justify relative z-10">
+                <p>
+                    Sé que pedirte perdón no es suficiente para reparar mis errores, y entiendo que mis acciones deben hablar por sí solas para demostrar mi arrepentimiento. Pero te aseguro que no hay nadie en el mundo que te ame como yo.
+                </p>
+                <p>
+                    Quiero que me dejes reconstruir poco a poco todo lo que fuimos y hacerlo mucho mejor; por favor, permíteme estar a tu lado por el resto de nuestras vidas.
+                </p>
+                <p>
+                    Porque tú eres la mujer con la que quiero despertar todos los días, a la que quiero cuidar y proteger como a una princesa. Sin importar lo que pase a mi alrededor, solo tengo ojos para ti. Aunque me costó comprender que no eres perfecta, entendí la belleza de tus imperfecciones y las amé por igual. Entendí que quiero estar contigo y con nadie más; quiero ser tu caballero en esta y en la otra vida, mi princesa hermosa.
+                </p>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-rose-500/20 text-right">
+                <p class="font-serif italic text-rose-300 text-sm">Con todo mi amor y arrepentimiento sincero</p>
+            </div>
+        </div>
+
+        <div class="space-y-3 mb-6">
+            <button onclick="acceptApology()" class="w-full py-4 px-6 bg-gradient-to-r from-rose-600 via-pink-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-medium rounded-2xl shadow-lg shadow-rose-900/50 border border-rose-400/30 transition-all transform active:scale-95 flex items-center justify-center gap-3 group">
+                <i class="fa-solid fa-heart text-amber-200 group-hover:scale-125 transition-transform text-lg"></i>
+                <span>Sí, acepto ser tu princesa 👑💖</span>
+            </button>
+
+            <button id="second-chance-btn" onclick="secondChanceClick()" class="w-full py-3.5 px-6 bg-white/5 hover:bg-white/10 text-rose-200 border border-rose-300/20 rounded-2xl backdrop-blur-md transition-all text-sm font-medium flex items-center justify-center gap-2 active:scale-95">
+                <i class="fa-solid fa-ring text-rose-300"></i>
+                <span>Promesa de Amor Eterno</span>
+            </button>
+        </div>
+
+        <!-- Success Modal / Interactive Message Box -->
+        <div id="response-modal" class="hidden glass-card rounded-2xl p-5 mb-6 text-center border border-rose-400/40 animate-fade-in">
+            <div class="text-rose-300 text-2xl mb-2"><i class="fa-solid fa-dove"></i></div>
+            <h3 class="font-serif text-lg font-bold text-rose-100 mb-1" id="modal-title">¡Gracias por darme esta oportunidad!</h3>
+            <p class="text-xs text-rose-200/90 leading-relaxed mb-3" id="modal-text">
+                Prometo honrar tu confianza cada día de mi vida y hacerte la mujer más feliz del mundo. Te amo infinitamente.
+            </p>
+            <p class="text-[11px] text-rose-300/80 font-serif italic">Redirigiendo a WhatsApp en un momento...</p>
+        </div>
+
+    </main>
+
+    <footer class="w-full py-4 text-center text-xs text-rose-300/50 z-10 max-w-md mx-auto">
+        <p>Creado con todo el corazón para ti Arianny🤍</p>
+    </footer>
+
+    <script>
+        const heartsContainer = document.getElementById('hearts-container');
+        const heartIcons = ['fa-heart', 'fa-sparkles', 'fa-seedling', 'fa-star'];
+        
+        function createFloatingHearts() {
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                const iconClass = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+                heart.innerHTML = `<i class="fa-solid ${iconClass}"></i>`;
+                
+                const size = Math.random() * 14 + 10;
+                heart.style.fontSize = `${size}px`;
+                heart.style.left = `${Math.random() * 100}vw`;
+                
+                const duration = Math.random() * 10 + 8;
+                const delay = Math.random() * 8;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.animationDelay = `${delay}s`;
+                
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            createFloatingHearts();
+        });
+
+        function acceptApology() {
+            // Lluvia de confeti
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#e0a899', '#f43f5e', '#fb7185', '#ffd700', '#ffffff']
+            });
+
+            // Mostrar modal de confirmación
+            const modal = document.getElementById('response-modal');
+            document.getElementById('modal-title').innerText = "¡Gracias por darme esta oportunidad!";
+            document.getElementById('modal-text').innerText = "Prometo honrar tu confianza cada día de mi vida y hacerte la mujer más feliz del mundo. Te amo infinitamente.";
+            modal.classList.remove('hidden');
+            modal.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            // Redirección a WhatsApp con mensaje predeterminado
+            const whatsappUrl = "https://wa.me/584125585535?text=" + encodeURIComponent("Sí, acepto ser tu princesa 👑💖");
+            
+            setTimeout(() => {
+                window.location.href = whatsappUrl;
+            }, 2000);
+        }
+
+        function secondChanceClick() {
+            const modal = document.getElementById('response-modal');
+            document.getElementById('modal-title').innerText = "Mi Promesa Eterna";
+            document.getElementById('modal-text').innerText = "Juro protegerte, valorarte y caminar tomado de tu mano ante cualquier adversidad. Eres mi única prioridad.";
+            modal.classList.remove('hidden');
+            
+            confetti({
+                particleCount: 70,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#ffd700', '#e0a899']
+            });
+            confetti({
+                particleCount: 70,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#f43f5e', '#fb7185']
+            });
+
+            modal.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            // Redirección a WhatsApp también para la promesa de amor
+            const whatsappUrl = "https://wa.me/584125585535?text=" + encodeURIComponent("Sí, acepto ser tu princesa 👑💖");
+            
+            setTimeout(() => {
+                window.location.href = whatsappUrl;
+            }, 2200);
+        }
+
+        let isPlaying = false;
+        function toggleAudio() {
+            const audio = document.getElementById('bg-audio');
+            const icon = document.getElementById('music-icon');
+            const text = document.getElementById('music-text');
+            
+            if (!isPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    icon.className = "fa-solid fa-volume-high text-rose-300 animate-bounce";
+                    text.innerText = "Música Activa";
+                }).catch(err => {
+                    isPlaying = true;
+                    icon.className = "fa-solid fa-volume-high text-rose-300";
+                    text.innerText = "Ambiente Romántico";
+                });
+            } else {
+                audio.pause();
+                isPlaying = false;
+                icon.className = "fa-solid fa-music";
+                text.innerText = "Música Romántica";
+            }
+        }
+    </script>
+</body>
+</html>
